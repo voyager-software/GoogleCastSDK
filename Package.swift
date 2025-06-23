@@ -3,19 +3,30 @@
 
 import PackageDescription
 
+enum PackageMetadata {
+    static let version: String = "4.8.3"
+    static let checksum: String = "bc2c3c2434ef2895a0388ac3f16932242d3d3ac11805f810dbe7d7bce3bb27f6"
+}
+
 let package = Package(
     name: "GoogleCastSDK",
+    platforms: [
+        .iOS(.v14),
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "GoogleCastSDK",
-            targets: ["GoogleCastSDK"]),
+            targets: ["GoogleCastSDK"]
+        ),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "GoogleCastSDK"),
-
+        .binaryTarget(
+            name: "GoogleCastSDK",
+            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-\(PackageMetadata.version)_dynamic.zip",
+            checksum: PackageMetadata.checksum
+        ),
     ]
 )
+
+// swift package compute-checksum ~/Downloads/GoogleCastSDK-ios-4.8.3_dynamic.zip
+// bc2c3c2434ef2895a0388ac3f16932242d3d3ac11805f810dbe7d7bce3bb27f6
