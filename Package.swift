@@ -3,11 +3,6 @@
 
 import PackageDescription
 
-enum PackageMetadata {
-    static let version: String = "4.8.3"
-    static let checksum: String = "bc2c3c2434ef2895a0388ac3f16932242d3d3ac11805f810dbe7d7bce3bb27f6"
-}
-
 let package = Package(
     name: "GoogleCastSDK",
     platforms: [
@@ -22,8 +17,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "GoogleCastSDK",
-            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-\(PackageMetadata.version)_dynamic.zip",
-            checksum: PackageMetadata.checksum
+            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-4.8.3_dynamic.zip",
+            checksum: "bc2c3c2434ef2895a0388ac3f16932242d3d3ac11805f810dbe7d7bce3bb27f6"
         ),
     ]
 )
