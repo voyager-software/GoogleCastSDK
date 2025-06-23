@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "GoogleCastSDK",
+    name: "GoogleCast",
     platforms: [
         .iOS(.v14),
     ],
