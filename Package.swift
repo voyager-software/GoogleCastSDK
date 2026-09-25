@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "GoogleCast",
     platforms: [
-        .iOS(.v14),
+        .iOS(.v16),
     ],
     products: [
         .library(
@@ -17,8 +17,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "GoogleCast",
-            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-4.8.4_dynamic.zip",
-            checksum: "c9c3a794e8585198b59c6bb7da5418a3194ffa1ffa6f9a1cbdf4dc0ea26dc6cf"
+            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-4.8.6_dynamic.zip",
+            checksum: "55f6c21291a1315c68063f07e7d76225564bff70f2fd38caad135c71d66eb310"
         ),
     ]
 )
@@ -28,3 +28,6 @@ let package = Package(
 
 // swift package compute-checksum ~/Downloads/GoogleCastSDK-ios-4.8.4_dynamic.zip
 // c9c3a794e8585198b59c6bb7da5418a3194ffa1ffa6f9a1cbdf4dc0ea26dc6cf
+
+// swift package compute-checksum ~/Downloads/GoogleCastSDK-ios-4.8.6_dynamic.zip
+// 55f6c21291a1315c68063f07e7d76225564bff70f2fd38caad135c71d66eb310
