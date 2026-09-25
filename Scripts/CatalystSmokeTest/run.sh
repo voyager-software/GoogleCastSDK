@@ -67,8 +67,29 @@ cat > "$APP/Contents/Info.plist" <<'EOF'
 EOF
 
 codesign --force --sign - "$APP/Contents/Frameworks/GoogleCast.framework"
-codesign --force --sign - "$APP"
 
+# SANDBOX=1 signs with App Sandbox + outgoing connections, like a sandboxed Catalyst app;
+# SANDBOX_INCOMING=1 also allows incoming connections.
+ENTITLEMENTS=()
+if [[ -n ${SANDBOX:-} ]]; then
+    ENT=$ROOT/Build/CatalystSmokeTest.entitlements
+    INCOMING=$([[ -n ${SANDBOX_INCOMING:-} ]] && echo true || echo false)
+    cat > "$ENT" <<ENTITLEMENTS_EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.app-sandbox</key><true/>
+    <key>com.apple.security.network.client</key><true/>
+    <key>com.apple.security.network.server</key><$INCOMING/>
+</dict>
+</plist>
+ENTITLEMENTS_EOF
+    ENTITLEMENTS=(--entitlements "$ENT")
+fi
+codesign --force --sign - "${ENTITLEMENTS[@]}" "$APP"
+
+# Pass SMOKE_CONNECT="<device name>" to also start a Cast session with that device.
 # Run the executable directly so its stderr is captured; the app exits by itself after ~25s.
 # (only go through arch for a non-native slice; it can stop the app from becoming active)
 RUN=("$APP/Contents/MacOS/CatalystSmokeTest")

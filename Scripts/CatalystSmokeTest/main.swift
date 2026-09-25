@@ -18,7 +18,19 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-final class SceneDelegate: UIResponder, UIWindowSceneDelegate, GCKDiscoveryManagerListener {
+/// Set SMOKE_CONNECT=<device name> to also start a Cast session with that device.
+let connectTarget = ProcessInfo.processInfo.environment["SMOKE_CONNECT"]
+
+final class SDKLogger: NSObject, GCKLoggerDelegate {
+    func logMessage(_ message: String, at level: GCKLoggerLevel, fromFunction function: String, location: String) {
+        guard connectTarget != nil, level.rawValue >= GCKLoggerLevel.info.rawValue else { return }
+        log("gck \(function): \(message)")
+    }
+}
+
+let sdkLogger = SDKLogger()
+
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate, GCKDiscoveryManagerListener, GCKSessionManagerListener {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -27,6 +39,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate, GCKDiscoveryManag
         let discovery = GCKCastContext.sharedInstance().discoveryManager
         discovery.add(self)
         discovery.startDiscovery()
+        GCKLogger.sharedInstance().delegate = sdkLogger
+        GCKCastContext.sharedInstance().sessionManager.add(self)
         log("discovery started")
 
         let controller = UIViewController()
@@ -52,6 +66,23 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate, GCKDiscoveryManag
 
     func didInsert(_ device: GCKDevice, at index: UInt) {
         log("found device: \(device.friendlyName ?? "unnamed") (\(device.modelName ?? "unknown model"))")
+        guard device.friendlyName == connectTarget else { return }
+        log("starting session with \(device.friendlyName ?? "")")
+        let started = GCKCastContext.sharedInstance().sessionManager.startSession(with: device)
+        log("startSession returned \(started)")
+    }
+
+    func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKCastSession) {
+        log("session started with \(session.device.friendlyName ?? "")")
+        sessionManager.endSessionAndStopCasting(true)
+    }
+
+    func sessionManager(_: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
+        log("session failed to start: \(error)")
+    }
+
+    func sessionManager(_: GCKSessionManager, didEnd session: GCKSession, withError error: Error?) {
+        log("session ended\(error.map { ": \($0)" } ?? "")")
     }
 }
 
