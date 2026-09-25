@@ -7,6 +7,7 @@ let package = Package(
     name: "GoogleCast",
     platforms: [
         .iOS(.v16),
+        .macCatalyst(.v16),
     ],
     products: [
         .library(
@@ -17,8 +18,10 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "GoogleCast",
-            url: "https://dl.google.com/dl/chromecast/sdk/ios/GoogleCastSDK-ios-4.8.6_dynamic.zip",
-            checksum: "55f6c21291a1315c68063f07e7d76225564bff70f2fd38caad135c71d66eb310"
+            // EXPERIMENTAL: Google's 4.8.6 xcframework plus an unofficial Mac Catalyst slice,
+            // built by Scripts/make-catalyst-xcframework.sh
+            url: "https://github.com/voyager-software/GoogleCastSDK/releases/download/4.8.6-catalyst-beta.1/GoogleCastSDK-ios-4.8.6_dynamic_catalyst.zip",
+            checksum: "68ae179f61637034de8b8be19ff016f56832c0ccf9f4dcd06d0375e17b055458"
         ),
     ]
 )
