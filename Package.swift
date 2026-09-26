@@ -20,8 +20,8 @@ let package = Package(
             name: "GoogleCast",
             // EXPERIMENTAL: Google's 4.8.6 xcframework plus an unofficial Mac Catalyst slice,
             // built by Scripts/make-catalyst-xcframework.sh
-            url: "https://github.com/voyager-software/GoogleCastSDK/releases/download/4.8.6-catalyst-beta.1/GoogleCastSDK-ios-4.8.6_dynamic_catalyst.zip",
-            checksum: "68ae179f61637034de8b8be19ff016f56832c0ccf9f4dcd06d0375e17b055458"
+            url: "https://github.com/voyager-software/GoogleCastSDK/releases/download/4.8.6-catalyst-beta.2/GoogleCastSDK-ios-4.8.6_dynamic_catalyst.zip",
+            checksum: "ceeac77092b3c574dbd6fd211dcb26d6e22116eadf6956e94ae6498c29317936"
         ),
     ]
 )

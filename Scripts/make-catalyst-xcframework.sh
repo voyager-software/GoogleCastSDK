@@ -8,6 +8,7 @@
 #
 # Usage: Scripts/make-catalyst-xcframework.sh [version]   (default 4.8.6)
 # Output: Build/GoogleCast.xcframework and Build/GoogleCastSDK-ios-<version>_dynamic_catalyst.zip
+# (the zip also carries Google's OpenSourceLicenses folder, which redistributing the binary requires)
 
 set -euo pipefail
 
@@ -68,10 +69,14 @@ xcodebuild -create-xcframework \
     -framework "$CAT" \
     -output "$OUT/GoogleCast.xcframework" >/dev/null
 
-# 4. Zip for use as a SwiftPM binary target (symlinks preserved).
+# 4. Zip for use as a SwiftPM binary target (symlinks preserved), with the open-source notices.
+LICENSES=$(find "$WORK/src" -type d -name OpenSourceLicenses -maxdepth 2 | head -1)
+[[ -n $LICENSES ]] || { echo "OpenSourceLicenses not found in $ZIP_NAME" >&2; exit 1; }
+rm -rf "$OUT/OpenSourceLicenses"
+cp -R "$LICENSES" "$OUT/OpenSourceLicenses"
 ZIP_OUT=$OUT/GoogleCastSDK-ios-${VERSION}_dynamic_catalyst.zip
 rm -f "$ZIP_OUT"
-(cd "$OUT" && zip -qry "$ZIP_OUT" GoogleCast.xcframework)
+(cd "$OUT" && zip -qry "$ZIP_OUT" GoogleCast.xcframework OpenSourceLicenses)
 
 echo "Created $OUT/GoogleCast.xcframework"
 echo "Created $ZIP_OUT"
